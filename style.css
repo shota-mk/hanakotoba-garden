@@ -1,14 +1,12 @@
 :root {
-  --bg: #0b0709;
-  --stone: #171114;
-  --stone-light: #1f171b;
-  --stone-shadow: #2a1e23;
-  --ink: #f1e8e2;
-  --ink-soft: #b5a39f;
-  --accent: #c1273f;        /* 深紅 */
-  --accent-deep: #7d1024;
-  --accent-faint: rgba(193, 39, 63, 0.35);
-  --lily: #f4efe6;
+  --bg: #050505;
+  --stone: #101010;
+  --stone-light: #171717;
+  --stone-shadow: #212121;
+  --ink: #f5f3ef;
+  --ink-soft: #a8a49e;
+  --accent: #ffffff;
+  --accent-faint: rgba(255, 255, 255, 0.32);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,10 +15,8 @@ body {
   font-family: "Shippori Mincho", serif;
   color: var(--ink);
   background:
-    radial-gradient(ellipse 55% 40% at 15% 0%, rgba(125, 16, 36, 0.35) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 35% at 90% 20%, rgba(193, 39, 63, 0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(125, 16, 36, 0.28) 0%, transparent 72%),
-    linear-gradient(180deg, #0e0a0c 0%, var(--bg) 50%, #070405 100%);
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #0a0a0a 0%, var(--bg) 50%, #000000 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -28,7 +24,32 @@ body {
   overflow-x: hidden;
 }
 
-/* ---- 背景に散る薔薇と百合 ---- */
+/* ---- スクリーントーン（網点） ---- */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.55) 1px, transparent 1.4px);
+}
+body::before {
+  top: -8vh; left: -8vw;
+  width: 62vw; height: 62vh;
+  background-size: 7px 7px;
+  -webkit-mask-image: radial-gradient(ellipse at 30% 25%, #000 0%, transparent 65%);
+  mask-image: radial-gradient(ellipse at 30% 25%, #000 0%, transparent 65%);
+  opacity: 0.28;
+}
+body::after {
+  bottom: -10vh; right: -8vw;
+  width: 55vw; height: 60vh;
+  background-size: 10px 10px;
+  -webkit-mask-image: radial-gradient(ellipse at 70% 75%, #000 0%, transparent 62%);
+  mask-image: radial-gradient(ellipse at 70% 75%, #000 0%, transparent 62%);
+  opacity: 0.2;
+}
+
+/* ---- 背景に散る線画の薔薇・百合・インクの飛沫 ---- */
 .flora-bg {
   position: fixed;
   inset: 0;
@@ -36,13 +57,7 @@ body {
   overflow: hidden;
   z-index: 0;
 }
-.flora-bg svg {
-  position: absolute;
-  filter: drop-shadow(0 0 18px rgba(193, 39, 63, 0.25));
-}
-.flora-bg svg.lily-svg {
-  filter: drop-shadow(0 0 14px rgba(244, 239, 230, 0.18));
-}
+.flora-bg svg { position: absolute; }
 
 /* ---- 舞い散る花びら ---- */
 .petals {
@@ -63,17 +78,16 @@ body {
   animation: fall var(--dur) linear var(--delay) infinite;
 }
 .petal.rose {
-  background: radial-gradient(circle at 30% 30%, #e0475e, var(--accent) 55%, var(--accent-deep));
-  box-shadow: 0 0 8px rgba(193, 39, 63, 0.5);
+  background: #121212;
+  border: 1.5px solid var(--ink);
 }
 .petal.lily {
-  background: radial-gradient(circle at 30% 30%, #ffffff, var(--lily) 60%, #d9cfbe);
-  box-shadow: 0 0 8px rgba(244, 239, 230, 0.35);
+  background: var(--ink);
 }
 @keyframes fall {
   0%   { transform: translate(0, -6vh) rotate(0deg); opacity: 0; }
-  8%   { opacity: 0.85; }
-  85%  { opacity: 0.6; }
+  8%   { opacity: 0.9; }
+  85%  { opacity: 0.65; }
   100% { transform: translate(var(--sway), 108vh) rotate(560deg); opacity: 0; }
 }
 
@@ -90,8 +104,8 @@ body {
 /* ---- 破風 ---- */
 .pediment { position: relative; text-align: center; }
 .pediment-svg { width: 100%; height: 130px; display: block; }
-.pediment-svg polygon:first-child { stroke: var(--accent); }
-.pediment-svg polygon:last-child { fill: rgba(31, 23, 27, 0.85); stroke: var(--accent-faint); }
+.pediment-svg polygon:first-child { stroke: var(--accent); stroke-width: 2.5; }
+.pediment-svg polygon:last-child { fill: rgba(16, 16, 16, 0.9); stroke: var(--accent-faint); }
 .pediment-text {
   position: absolute;
   inset: 0;
@@ -104,9 +118,8 @@ body {
 .latin {
   font-family: "Cinzel", serif;
   font-size: 11px;
-  letter-spacing: 0.5em;
-  color: var(--accent);
-  text-shadow: 0 0 12px rgba(193, 39, 63, 0.6);
+  letter-spacing: 0.55em;
+  color: var(--ink-soft);
 }
 .pediment-text h1 {
   font-size: clamp(20px, 4vw, 30px);
@@ -115,7 +128,7 @@ body {
   text-indent: 0.35em;
   margin-top: 4px;
   color: var(--ink);
-  text-shadow: 0 2px 18px rgba(193, 39, 63, 0.45);
+  text-shadow: 3px 3px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* ---- 柱 ---- */
@@ -124,7 +137,7 @@ body {
   display: flex;
   gap: clamp(12px, 3vw, 36px);
   align-items: stretch;
-  border-top: 2px solid var(--accent-faint);
+  border-top: 2px solid var(--ink);
   padding-top: 10px;
 }
 .column {
@@ -132,30 +145,28 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  opacity: 0.9;
 }
 .capital {
   height: 22px;
-  background: linear-gradient(180deg, var(--stone-shadow), var(--stone));
-  border: 1px solid var(--accent-faint);
-  border-radius: 3px;
+  background: var(--stone);
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
 }
 .shaft {
   flex: 1;
   margin: 0 5px;
-  border-left: 1px solid var(--stone-shadow);
-  border-right: 1px solid var(--stone-shadow);
+  border-left: 1.5px solid var(--ink);
+  border-right: 1.5px solid var(--ink);
   background:
     repeating-linear-gradient(90deg,
       var(--stone-light) 0px, var(--stone-light) 6px,
       var(--stone-shadow) 7px, var(--stone) 9px);
-  box-shadow: inset 0 0 24px rgba(193, 39, 63, 0.12);
 }
 .base {
   height: 26px;
-  background: linear-gradient(180deg, var(--stone), var(--stone-shadow));
-  border: 1px solid var(--accent-faint);
-  border-radius: 3px;
+  background: var(--stone);
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
 }
 
 /* ---- 本殿 ---- */
@@ -163,11 +174,11 @@ body {
   flex: 1;
   text-align: center;
   padding: clamp(28px, 5vh, 56px) clamp(12px, 3vw, 40px);
-  animation: bloom 1.6s ease both;
+  animation: bloom 1.2s ease both;
 }
 @keyframes bloom {
-  from { opacity: 0; transform: translateY(16px); filter: blur(4px); }
-  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .date-line {
@@ -176,57 +187,55 @@ body {
   letter-spacing: 0.35em;
   color: var(--ink-soft);
 }
-.laurel svg { width: 110px; margin: 10px auto 26px; display: block; opacity: 0.9; }
-.laurel path { stroke: var(--accent); }
-.laurel circle { fill: var(--accent); }
+.laurel svg { width: 110px; margin: 10px auto 26px; display: block; }
+.laurel path { stroke: var(--ink); stroke-width: 2; }
+.laurel circle { fill: var(--ink); }
 
 .label {
   font-size: 12px;
-  letter-spacing: 0.45em;
-  text-indent: 0.45em;
-  color: var(--accent);
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: var(--ink-soft);
   margin-bottom: 10px;
-  text-shadow: 0 0 10px rgba(193, 39, 63, 0.5);
+  border-top: 1px solid var(--accent-faint);
+  border-bottom: 1px solid var(--accent-faint);
+  display: inline-block;
+  padding: 4px 14px;
 }
 .flower-name {
   font-size: clamp(30px, 6vw, 46px);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.14em;
-  margin-bottom: 34px;
-  background: linear-gradient(120deg, #e8dcd4 10%, #e0475e 45%, var(--lily) 75%, #c1273f 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 14px rgba(193, 39, 63, 0.35));
+  margin: 14px 0 34px;
+  color: var(--ink);
+  text-shadow: 4px 4px 0 rgba(255, 255, 255, 0.14);
 }
 .meaning {
   font-size: clamp(18px, 3vw, 23px);
   letter-spacing: 0.22em;
   color: var(--ink);
-  margin-bottom: 6px;
-  text-shadow: 0 0 20px rgba(244, 239, 230, 0.25);
+  margin: 14px 0 6px;
 }
 
 .divider {
-  color: var(--accent);
-  font-size: 15px;
+  color: var(--ink);
+  font-size: 16px;
   margin: 30px 0;
   position: relative;
-  text-shadow: 0 0 10px rgba(193, 39, 63, 0.7);
 }
 .divider::before, .divider::after {
   content: "";
   position: absolute;
   top: 50%;
   width: min(120px, 22%);
-  border-top: 1px solid var(--accent-faint);
+  border-top: 1.5px solid var(--ink);
 }
 .divider::before { right: calc(50% + 24px); }
 .divider::after  { left:  calc(50% + 24px); }
 
 .message {
   max-width: 34em;
-  margin: 0 auto;
+  margin: 14px auto 0;
   font-size: clamp(15px, 2.4vw, 17px);
   line-height: 2.2;
   color: var(--ink-soft);
@@ -253,21 +262,20 @@ body {
   font-family: inherit;
   font-size: 13px;
   padding: 8px 14px;
-  border: 1px solid var(--accent-faint);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: #0d0d0d;
   color: var(--ink);
   color-scheme: dark;
 }
 .date-picker button {
   cursor: pointer;
   letter-spacing: 0.15em;
-  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  transition: background 0.15s, color 0.15s;
 }
 .date-picker button:hover {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 0 16px rgba(193, 39, 63, 0.5);
+  background: var(--ink);
+  color: #000;
 }
 
 /* ---- 花から探す ---- */
@@ -282,20 +290,19 @@ body {
   width: 100%;
   text-align: center;
   letter-spacing: 0.1em;
-  transition: box-shadow 0.3s, border-color 0.3s;
+  transition: box-shadow 0.15s;
 }
-.search-row input::placeholder { color: #7a6b67; }
+.search-row input::placeholder { color: #6d6a65; }
 .search-row input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(193, 39, 63, 0.2), 0 0 18px rgba(193, 39, 63, 0.25);
+  box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.25);
 }
 .search-results {
   list-style: none;
   margin-top: 14px;
   text-align: left;
 }
-.search-results li { animation: bloom 0.6s ease both; }
+.search-results li { animation: bloom 0.5s ease both; }
 .search-results button {
   width: 100%;
   font-family: inherit;
@@ -303,22 +310,25 @@ body {
   text-align: left;
   padding: 10px 14px;
   margin-bottom: 6px;
-  border: 1px solid var(--accent-faint);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: #0d0d0d;
   color: var(--ink);
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
   line-height: 1.7;
 }
 .search-results button:hover {
-  background: rgba(193, 39, 63, 0.18);
-  transform: translateY(-1px);
-  box-shadow: 0 0 14px rgba(193, 39, 63, 0.3);
+  background: var(--ink);
+  color: #000;
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.3);
 }
+.search-results button:hover .r-date,
+.search-results button:hover .r-meaning { color: #333; }
 .search-results .r-date {
   font-size: 11.5px;
-  color: var(--accent);
+  color: var(--ink-soft);
   letter-spacing: 0.15em;
   margin-right: 10px;
 }
@@ -339,9 +349,9 @@ body {
 .stylobate { text-align: center; }
 .stylobate .step {
   height: 14px;
-  border: 1px solid var(--accent-faint);
+  border: 1.5px solid var(--ink);
   border-bottom: none;
-  background: linear-gradient(180deg, var(--stone-light), var(--stone-shadow));
+  background: var(--stone);
 }
 .stylobate .step:nth-child(2) { margin: 0 -12px; }
 .credit {
@@ -349,7 +359,7 @@ body {
   letter-spacing: 0.25em;
   color: var(--ink-soft);
   padding: 14px 0 18px;
-  background: var(--stone-shadow);
+  background: var(--stone);
   margin: 0 -24px;
 }
 
