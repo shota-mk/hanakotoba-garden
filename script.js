@@ -120,18 +120,65 @@
 
   searchInput.addEventListener("input", function () { search(searchInput.value); });
 
-  /* ---- 舞い散る花びら ---- */
+  /* ---- 舞い散る花びら（深紅の薔薇と白百合） ---- */
   const petals = document.getElementById("petals");
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 18; i++) {
     const p = document.createElement("span");
-    p.className = "petal";
+    p.className = "petal " + (i % 3 === 0 ? "lily" : "rose");
     p.style.setProperty("--x", Math.random() * 100 + "vw");
-    p.style.setProperty("--size", 8 + Math.random() * 8 + "px");
+    p.style.setProperty("--size", 8 + Math.random() * 9 + "px");
     p.style.setProperty("--dur", 9 + Math.random() * 9 + "s");
     p.style.setProperty("--delay", Math.random() * 12 + "s");
     p.style.setProperty("--sway", (Math.random() * 30 - 15) + "vw");
     petals.appendChild(p);
   }
+
+  /* ---- 背景に散る薔薇と百合 ---- */
+  const ROSE_SVG =
+    '<svg class="rose-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+    '<g>' +
+    '<ellipse cx="50" cy="26" rx="15" ry="21" fill="#7d1024" transform="rotate(0 50 50)"/>' +
+    '<ellipse cx="50" cy="26" rx="15" ry="21" fill="#8f1229" transform="rotate(72 50 50)"/>' +
+    '<ellipse cx="50" cy="26" rx="15" ry="21" fill="#7d1024" transform="rotate(144 50 50)"/>' +
+    '<ellipse cx="50" cy="26" rx="15" ry="21" fill="#8f1229" transform="rotate(216 50 50)"/>' +
+    '<ellipse cx="50" cy="26" rx="15" ry="21" fill="#96142c" transform="rotate(288 50 50)"/>' +
+    '<circle cx="50" cy="50" r="20" fill="#a51834"/>' +
+    '<path d="M50 50 m-14 0 a14 14 0 1 1 14 14 a10 10 0 1 0 -10 -10 a7 7 0 1 1 7 7" ' +
+    'fill="none" stroke="#d94a63" stroke-width="2.5" stroke-linecap="round"/>' +
+    '</g></svg>';
+
+  const LILY_SVG =
+    '<svg class="lily-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+    '<g>' +
+    [0, 60, 120, 180, 240, 300].map(function (deg, i) {
+      const fill = i % 2 === 0 ? "#f4efe6" : "#e6ddcc";
+      return '<path d="M50 50 C 42 30, 44 12, 50 4 C 56 12, 58 30, 50 50 Z" fill="' + fill + '" transform="rotate(' + deg + ' 50 50)"/>';
+    }).join("") +
+    '<circle cx="50" cy="50" r="4.5" fill="#d9b23c"/>' +
+    '<g stroke="#d9b23c" stroke-width="1.6" stroke-linecap="round">' +
+    '<line x1="50" y1="50" x2="42" y2="36"/><line x1="50" y1="50" x2="58" y2="36"/><line x1="50" y1="50" x2="50" y2="33"/>' +
+    '</g>' +
+    '<circle cx="42" cy="36" r="2.4" fill="#b4471f"/><circle cx="58" cy="36" r="2.4" fill="#b4471f"/><circle cx="50" cy="33" r="2.4" fill="#b4471f"/>' +
+    '</g></svg>';
+
+  const flora = document.getElementById("floraBg");
+  const blooms = [];
+  for (let i = 0; i < 14; i++) blooms.push(i % 2 === 0 ? ROSE_SVG : LILY_SVG);
+  blooms.forEach(function (svg, i) {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = svg;
+    const el = wrap.firstChild;
+    const size = 55 + Math.random() * 95;
+    el.style.width = size + "px";
+    el.style.height = size + "px";
+    // 中央の文章を避けて左右の帯に散らす
+    const leftBand = Math.random() < 0.5;
+    el.style.left = (leftBand ? Math.random() * 22 : 78 + Math.random() * 18) + "vw";
+    el.style.top = Math.random() * 92 + "vh";
+    el.style.opacity = (0.16 + Math.random() * 0.2).toFixed(2);
+    el.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
+    flora.appendChild(el);
+  });
 
   render(today);
 })();

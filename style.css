@@ -1,13 +1,14 @@
 :root {
-  --marble: #faf7f6;
-  --marble-light: #fdfbfa;
-  --marble-shadow: #efe8e6;
-  --ink: #5c5450;
-  --ink-soft: #8a7f7a;
-  --accent: #c9a2a2;        /* くすんだ桜色 */
-  --accent-faint: #e9d8d6;
-  --sakura: #f3d9dd;
-  --lavender: #e3dcec;
+  --bg: #0b0709;
+  --stone: #171114;
+  --stone-light: #1f171b;
+  --stone-shadow: #2a1e23;
+  --ink: #f1e8e2;
+  --ink-soft: #b5a39f;
+  --accent: #c1273f;        /* 深紅 */
+  --accent-deep: #7d1024;
+  --accent-faint: rgba(193, 39, 63, 0.35);
+  --lily: #f4efe6;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,15 +17,31 @@ body {
   font-family: "Shippori Mincho", serif;
   color: var(--ink);
   background:
-    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(243, 217, 221, 0.5) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 35% at 85% 15%, rgba(227, 220, 236, 0.45) 0%, transparent 70%),
-    radial-gradient(ellipse 70% 40% at 50% 100%, rgba(243, 217, 221, 0.3) 0%, transparent 70%),
-    linear-gradient(180deg, #fffefe 0%, var(--marble) 55%, #f3edeb 100%);
+    radial-gradient(ellipse 55% 40% at 15% 0%, rgba(125, 16, 36, 0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 90% 20%, rgba(193, 39, 63, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(125, 16, 36, 0.28) 0%, transparent 72%),
+    linear-gradient(180deg, #0e0a0c 0%, var(--bg) 50%, #070405 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 24px 16px 0;
   overflow-x: hidden;
+}
+
+/* ---- 背景に散る薔薇と百合 ---- */
+.flora-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.flora-bg svg {
+  position: absolute;
+  filter: drop-shadow(0 0 18px rgba(193, 39, 63, 0.25));
+}
+.flora-bg svg.lily-svg {
+  filter: drop-shadow(0 0 14px rgba(244, 239, 230, 0.18));
 }
 
 /* ---- 舞い散る花びら ---- */
@@ -41,15 +58,22 @@ body {
   left: var(--x);
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle at 30% 30%, #fbeef1, var(--sakura) 60%, #ecc3cc);
   border-radius: 100% 4% 100% 4%;
   opacity: 0;
   animation: fall var(--dur) linear var(--delay) infinite;
 }
+.petal.rose {
+  background: radial-gradient(circle at 30% 30%, #e0475e, var(--accent) 55%, var(--accent-deep));
+  box-shadow: 0 0 8px rgba(193, 39, 63, 0.5);
+}
+.petal.lily {
+  background: radial-gradient(circle at 30% 30%, #ffffff, var(--lily) 60%, #d9cfbe);
+  box-shadow: 0 0 8px rgba(244, 239, 230, 0.35);
+}
 @keyframes fall {
   0%   { transform: translate(0, -6vh) rotate(0deg); opacity: 0; }
-  8%   { opacity: 0.75; }
-  85%  { opacity: 0.55; }
+  8%   { opacity: 0.85; }
+  85%  { opacity: 0.6; }
   100% { transform: translate(var(--sway), 108vh) rotate(560deg); opacity: 0; }
 }
 
@@ -65,7 +89,9 @@ body {
 
 /* ---- 破風 ---- */
 .pediment { position: relative; text-align: center; }
-.pediment-svg { width: 100%; height: 130px; display: block; opacity: 0.85; }
+.pediment-svg { width: 100%; height: 130px; display: block; }
+.pediment-svg polygon:first-child { stroke: var(--accent); }
+.pediment-svg polygon:last-child { fill: rgba(31, 23, 27, 0.85); stroke: var(--accent-faint); }
 .pediment-text {
   position: absolute;
   inset: 0;
@@ -80,14 +106,16 @@ body {
   font-size: 11px;
   letter-spacing: 0.5em;
   color: var(--accent);
+  text-shadow: 0 0 12px rgba(193, 39, 63, 0.6);
 }
 .pediment-text h1 {
   font-size: clamp(20px, 4vw, 30px);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.35em;
   text-indent: 0.35em;
   margin-top: 4px;
   color: var(--ink);
+  text-shadow: 0 2px 18px rgba(193, 39, 63, 0.45);
 }
 
 /* ---- 柱 ---- */
@@ -104,28 +132,28 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 .capital {
   height: 22px;
-  background: linear-gradient(180deg, #fff, var(--marble-shadow));
+  background: linear-gradient(180deg, var(--stone-shadow), var(--stone));
   border: 1px solid var(--accent-faint);
   border-radius: 3px;
 }
 .shaft {
   flex: 1;
   margin: 0 5px;
-  border-left: 1px solid var(--marble-shadow);
-  border-right: 1px solid var(--marble-shadow);
+  border-left: 1px solid var(--stone-shadow);
+  border-right: 1px solid var(--stone-shadow);
   background:
     repeating-linear-gradient(90deg,
-      #ffffff 0px, #ffffff 6px,
-      var(--marble-shadow) 7px, #f6f0ee 9px);
-  box-shadow: inset 0 0 24px rgba(201, 162, 162, 0.07);
+      var(--stone-light) 0px, var(--stone-light) 6px,
+      var(--stone-shadow) 7px, var(--stone) 9px);
+  box-shadow: inset 0 0 24px rgba(193, 39, 63, 0.12);
 }
 .base {
   height: 26px;
-  background: linear-gradient(180deg, var(--marble-shadow), #fff);
+  background: linear-gradient(180deg, var(--stone), var(--stone-shadow));
   border: 1px solid var(--accent-faint);
   border-radius: 3px;
 }
@@ -149,6 +177,8 @@ body {
   color: var(--ink-soft);
 }
 .laurel svg { width: 110px; margin: 10px auto 26px; display: block; opacity: 0.9; }
+.laurel path { stroke: var(--accent); }
+.laurel circle { fill: var(--accent); }
 
 .label {
   font-size: 12px;
@@ -156,22 +186,25 @@ body {
   text-indent: 0.45em;
   color: var(--accent);
   margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(193, 39, 63, 0.5);
 }
 .flower-name {
   font-size: clamp(30px, 6vw, 46px);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.14em;
   margin-bottom: 34px;
-  background: linear-gradient(120deg, #7a6a66 20%, #b58b90 55%, #8d80a0 85%);
+  background: linear-gradient(120deg, #e8dcd4 10%, #e0475e 45%, var(--lily) 75%, #c1273f 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 14px rgba(193, 39, 63, 0.35));
 }
 .meaning {
   font-size: clamp(18px, 3vw, 23px);
   letter-spacing: 0.22em;
   color: var(--ink);
   margin-bottom: 6px;
+  text-shadow: 0 0 20px rgba(244, 239, 230, 0.25);
 }
 
 .divider {
@@ -179,7 +212,7 @@ body {
   font-size: 15px;
   margin: 30px 0;
   position: relative;
-  opacity: 0.9;
+  text-shadow: 0 0 10px rgba(193, 39, 63, 0.7);
 }
 .divider::before, .divider::after {
   content: "";
@@ -222,15 +255,20 @@ body {
   padding: 8px 14px;
   border: 1px solid var(--accent-faint);
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--ink);
+  color-scheme: dark;
 }
 .date-picker button {
   cursor: pointer;
   letter-spacing: 0.15em;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 }
-.date-picker button:hover { background: var(--accent); color: #fff; }
+.date-picker button:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(193, 39, 63, 0.5);
+}
 
 /* ---- 花から探す ---- */
 .flower-search {
@@ -246,10 +284,11 @@ body {
   letter-spacing: 0.1em;
   transition: box-shadow 0.3s, border-color 0.3s;
 }
+.search-row input::placeholder { color: #7a6b67; }
 .search-row input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201, 162, 162, 0.15);
+  box-shadow: 0 0 0 3px rgba(193, 39, 63, 0.2), 0 0 18px rgba(193, 39, 63, 0.25);
 }
 .search-results {
   list-style: none;
@@ -266,15 +305,16 @@ body {
   margin-bottom: 6px;
   border: 1px solid var(--accent-faint);
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--ink);
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
   line-height: 1.7;
 }
 .search-results button:hover {
-  background: rgba(243, 217, 221, 0.45);
+  background: rgba(193, 39, 63, 0.18);
   transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(193, 39, 63, 0.3);
 }
 .search-results .r-date {
   font-size: 11.5px;
@@ -301,7 +341,7 @@ body {
   height: 14px;
   border: 1px solid var(--accent-faint);
   border-bottom: none;
-  background: linear-gradient(180deg, #fff, var(--marble-shadow));
+  background: linear-gradient(180deg, var(--stone-light), var(--stone-shadow));
 }
 .stylobate .step:nth-child(2) { margin: 0 -12px; }
 .credit {
@@ -309,7 +349,7 @@ body {
   letter-spacing: 0.25em;
   color: var(--ink-soft);
   padding: 14px 0 18px;
-  background: var(--marble-shadow);
+  background: var(--stone-shadow);
   margin: 0 -24px;
 }
 
