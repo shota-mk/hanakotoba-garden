@@ -181,24 +181,75 @@
     '<path d="M70 40 L 84 28 L 76 42 Z"/><path d="M34 60 L 16 58 L 32 66 Z"/>' +
     '</g></svg>';
 
+  // 彫刻風・茎の長い一輪の薔薇
+  const STEM_ROSE_SVG =
+    '<svg class="stem-rose-svg" viewBox="0 0 120 260" xmlns="http://www.w3.org/2000/svg">' +
+    '<g fill="none" stroke="' + INK + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    // 花：外側の波打つ花びら
+    '<path d="M60 16 A 13 13 0 0 1 76 24 A 13 13 0 0 1 85 40 A 13 13 0 0 1 78 57 A 13 13 0 0 1 61 67 A 13 13 0 0 1 44 59 A 13 13 0 0 1 35 42 A 13 13 0 0 1 43 25 A 13 13 0 0 1 60 16 Z" fill="#0a0a0a"/>' +
+    // 花：中間の花びら
+    '<path d="M60 25 A 9 9 0 0 1 72 31 A 9 9 0 0 1 77 43 A 9 9 0 0 1 71 55 A 9 9 0 0 1 59 60 A 9 9 0 0 1 47 54 A 9 9 0 0 1 43 42 A 9 9 0 0 1 49 30 A 9 9 0 0 1 60 25 Z"/>' +
+    // 花：渦を巻く中心
+    '<path d="M60 42 m-4 0 a4 4 0 1 1 4 4 a7 7 0 1 0 -7 -7 a10 10 0 1 1 10 10" stroke-width="1.7"/>' +
+    // 花びらの折り返し
+    '<path d="M76 24 Q 69 31 66 28 M85 40 Q 76 43 76 39 M78 57 Q 71 52 74 49 M44 59 Q 49 52 52 55" stroke-width="1.5"/>' +
+    // がく
+    '<path d="M52 64 Q 45 76 38 84 Q 49 79 55 70 Z" fill="#0a0a0a"/>' +
+    '<path d="M68 64 Q 75 76 82 84 Q 71 79 65 70 Z" fill="#0a0a0a"/>' +
+    '<path d="M60 67 Q 59 78 56 86 Q 64 78 63 69 Z" fill="#0a0a0a"/>' +
+    // 茎
+    '<path d="M60 68 C 56 104, 66 146, 58 200 C 55 224, 61 242, 58 256" stroke-width="2.6"/>' +
+    // とげ
+    '<path d="M59 104 L 51 99 L 60 112 Z" fill="' + INK + '" stroke-width="1"/>' +
+    '<path d="M62 152 L 70 148 L 62 160 Z" fill="' + INK + '" stroke-width="1"/>' +
+    // 左の葉
+    '<path d="M59 126 Q 46 122 34 127 M34 127 Q 18 122 8 133 Q 17 147 32 142 Q 38 134 34 127 Z"/>' +
+    '<path d="M33 129 L 12 136 M28 131 L 26 139 M21 132 L 19 138" stroke-width="1.4"/>' +
+    // 右の葉
+    '<path d="M61 168 Q 74 165 86 170 M86 170 Q 102 166 112 177 Q 102 190 88 184 Q 82 176 86 170 Z"/>' +
+    '<path d="M87 172 L 108 180 M92 174 L 94 182 M99 176 L 101 182" stroke-width="1.4"/>' +
+    // 左下の葉
+    '<path d="M58 206 Q 47 204 37 210 M37 210 Q 23 207 14 218 Q 24 230 37 224 Q 42 216 37 210 Z"/>' +
+    '<path d="M36 212 L 18 221 M31 214 L 30 221" stroke-width="1.4"/>' +
+    '</g></svg>';
+
   const flora = document.getElementById("floraBg");
+
+  // 左右に大きく一輪ずつ、彫刻のように配置
+  [
+    { left: "1vw",  top: "16vh", h: 52, rot: -7 },
+    { left: "86vw", top: "38vh", h: 56, rot: 8 }
+  ].forEach(function (pos) {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = STEM_ROSE_SVG;
+    const el = wrap.firstChild;
+    el.style.height = pos.h + "vh";
+    el.style.width = (pos.h * 120 / 260) + "vh";
+    el.style.left = pos.left;
+    el.style.top = pos.top;
+    el.style.opacity = "0.55";
+    el.style.zIndex = "2";
+    el.style.transform = "rotate(" + pos.rot + "deg)";
+    flora.appendChild(el);
+  });
+
   const blooms = [];
-  for (let i = 0; i < 6; i++) blooms.push(ROSE_SVG);
-  for (let i = 0; i < 5; i++) blooms.push(LILY_SVG);
+  for (let i = 0; i < 4; i++) blooms.push(ROSE_SVG);
+  for (let i = 0; i < 4; i++) blooms.push(LILY_SVG);
   for (let i = 0; i < 4; i++) blooms.push(SPLAT_SVG);
   blooms.forEach(function (svg) {
     const wrap = document.createElement("div");
     wrap.innerHTML = svg;
     const el = wrap.firstChild;
     const isSplat = el.classList.contains("splat-svg");
-    const size = (isSplat ? 40 : 60) + Math.random() * (isSplat ? 60 : 100);
+    const size = (isSplat ? 36 : 44) + Math.random() * (isSplat ? 46 : 66);
     el.style.width = size + "px";
     el.style.height = size + "px";
-    // 中央の文章を避けて左右の帯に散らす
+    // 中央の文章を避けて画面の端に細く散らす
     const leftBand = Math.random() < 0.5;
-    el.style.left = (leftBand ? Math.random() * 20 : 80 + Math.random() * 16) + "vw";
+    el.style.left = (leftBand ? Math.random() * 10 : 90 + Math.random() * 8) + "vw";
     el.style.top = Math.random() * 92 + "vh";
-    el.style.opacity = (isSplat ? 0.1 + Math.random() * 0.12 : 0.28 + Math.random() * 0.3).toFixed(2);
+    el.style.opacity = (isSplat ? 0.08 + Math.random() * 0.1 : 0.16 + Math.random() * 0.18).toFixed(2);
     el.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
     flora.appendChild(el);
   });
