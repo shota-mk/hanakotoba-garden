@@ -3,95 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>祥大のお花畑 — 今日のひと花</title>
+<title>祥大のお花畑</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Shippori+Mincho:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
-<div class="flora-bg" id="floraBg" aria-hidden="true"></div>
-<div class="petals" id="petals" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 
-<div class="temple">
+<header class="masthead">
+  <h1>祥大のお花畑</h1>
+  <p class="masthead-note">HORTUS FLORUM — A FLOWER A DAY</p>
+</header>
 
-  <!-- 破風（ペディメント） -->
-  <header class="pediment">
-    <svg class="pediment-svg" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-hidden="true">
-      <polygon points="500,8 992,142 8,142" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
-      <polygon points="500,30 940,138 60,138" fill="var(--marble-light)" stroke="var(--accent-faint)" stroke-width="1"/>
-    </svg>
-    <div class="pediment-text">
-      <span class="latin">HORTUS FLORUM</span>
-      <h1>祥大のお花畑</h1>
+<main>
+  <section class="hero" id="hero">
+
+    <div class="hero-date">
+      <p class="date-en" id="dateEn">—</p>
+      <p class="date-num" id="dateNum">00</p>
+      <p class="date-meta" id="dateMeta">—</p>
+      <p class="specimen" id="specimen">No.000 / 366</p>
+      <div class="year-line" aria-hidden="true"><span class="year-dot" id="yearDot"></span></div>
     </div>
-  </header>
 
-  <!-- 柱と本殿 -->
-  <div class="colonnade">
-    <div class="column" aria-hidden="true"><div class="capital"></div><div class="shaft"></div><div class="base"></div></div>
-
-    <main class="sanctuary">
-      <p class="date-line" id="dateLine">—</p>
-      <div class="laurel" aria-hidden="true">
-        <svg viewBox="0 0 120 40"><path d="M10 30 Q35 5 60 8 Q85 5 110 30" fill="none" stroke="var(--accent)" stroke-width="1.2"/><circle cx="60" cy="8" r="2.2" fill="var(--accent)"/></svg>
-      </div>
-
-      <p class="label">今日の花</p>
-      <h2 class="flower-name" id="flowerName">…</h2>
-
-      <p class="label">花言葉</p>
+    <div class="hero-main">
+      <div class="red-sun" aria-hidden="true"></div>
+      <p class="kicker">TODAY'S FLOWER<span class="kicker-jp">今日の花</span></p>
+      <h2 class="flower" id="flowerName">…</h2>
       <p class="meaning" id="flowerMeaning">…</p>
-
-      <div class="divider" aria-hidden="true">❀</div>
-
-      <p class="label label-message">— 今日を生きる、あなたへ —</p>
+      <p class="message-label">今日を生きる、あなたへ</p>
       <p class="message" id="flowerMessage">…</p>
+    </div>
 
-      <!-- 日付から探す -->
-      <div class="date-picker">
-        <label for="datePick">他の日の花を訪ねる</label>
+    <p class="vertical" aria-hidden="true">一日一花、言葉を胸に</p>
+  </section>
+
+  <section class="controls">
+    <div class="control date-control">
+      <label for="datePick">DATE — 日付から</label>
+      <div class="control-row">
         <input type="date" id="datePick">
-        <button id="todayBtn" type="button">今日に戻る</button>
+        <button id="todayBtn" type="button">TODAY ↺</button>
       </div>
-
-      <!-- 花から探す -->
-      <div class="flower-search">
-        <label for="flowerSearch">花の名前・花言葉から探す</label>
-        <div class="search-row">
-          <input type="text" id="flowerSearch" list="flowerList"
-                 placeholder="例：ヒマワリ、勇気 …" autocomplete="off">
-          <datalist id="flowerList"></datalist>
-        </div>
-        <ul class="search-results" id="searchResults"></ul>
+    </div>
+    <div class="control search-control">
+      <label for="flowerSearch">INDEX — 花・花言葉から</label>
+      <div class="control-row">
+        <input type="text" id="flowerSearch" list="flowerList" placeholder="ヒマワリ、勇気 …" autocomplete="off">
+        <datalist id="flowerList"></datalist>
       </div>
-    </main>
+    </div>
+  </section>
 
-    <div class="column" aria-hidden="true"><div class="capital"></div><div class="shaft"></div><div class="base"></div></div>
-  </div>
+  <ul class="results" id="searchResults"></ul>
+</main>
 
-  <!-- 基壇 -->
-  <footer class="stylobate">
-    <div class="step"></div>
-    <div class="step"></div>
-    <p class="credit">移ろう季節に、今日だけの一輪を。</p>
-  </footer>
+<footer class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</footer>
 
-</div>
-
-<script src="data/data-01.js?v=4"></script>
-<script src="data/data-02.js?v=4"></script>
-<script src="data/data-03.js?v=4"></script>
-<script src="data/data-04.js?v=4"></script>
-<script src="data/data-05.js?v=4"></script>
-<script src="data/data-06.js?v=4"></script>
-<script src="data/data-07.js?v=4"></script>
-<script src="data/data-08.js?v=4"></script>
-<script src="data/data-09.js?v=4"></script>
-<script src="data/data-10.js?v=4"></script>
-<script src="data/data-11.js?v=4"></script>
-<script src="data/data-12.js?v=4"></script>
-<script src="script.js?v=4"></script>
+<script src="data/data-01.js?v=5"></script>
+<script src="data/data-02.js?v=5"></script>
+<script src="data/data-03.js?v=5"></script>
+<script src="data/data-04.js?v=5"></script>
+<script src="data/data-05.js?v=5"></script>
+<script src="data/data-06.js?v=5"></script>
+<script src="data/data-07.js?v=5"></script>
+<script src="data/data-08.js?v=5"></script>
+<script src="data/data-09.js?v=5"></script>
+<script src="data/data-10.js?v=5"></script>
+<script src="data/data-11.js?v=5"></script>
+<script src="data/data-12.js?v=5"></script>
+<script src="script.js?v=5"></script>
 </body>
 </html>
