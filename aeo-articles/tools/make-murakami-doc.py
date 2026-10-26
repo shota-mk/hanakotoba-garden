@@ -24,5 +24,9 @@ s=re.sub(r'<h3[^>]*>(.*?)</h3>\s*<p>(.*?)</p>',faq,s)
 s=re.sub(r'(<p>太字：[^<]*</p>)',r'\1\n<p>よくある質問：Q.（質問）と A.（回答）の形。Studio のよくある質問（開閉式）に、質問と回答をそれぞれ入れる。「Q.」「A.」の文字は Studio 側で付くので、表の右側の文だけを貼る</p>',s)
 s=s.replace('<p>【村上さんに確認：','<p style="color:#C00000;background-color:#FFF0F0">【村上さんに確認：')
 assert 'raw.githubusercontent' not in s and '<img' not in s
+# 図（グラフ）：原稿の「【図：ファイル名】説明」を、リポジトリに置いた PNG の画像にする（2026-10-26 村上さんの指示）
+RAWC='https://raw.githubusercontent.com/shota-mk/hanakotoba-garden/claude/voco-aeo-article-generation-padk3v/aeo-articles/murakami/charts/'
+s=re.sub(r'<p>【図：([^】]+)】([^<]*)</p>',
+         lambda m: f'<p style="text-align:center"><img src="{RAWC}{m.group(1)}" width="612"></p>\n<p style="text-align:center;color:#6B6B6B;font-size:10pt">{m.group(2)}</p>', s)
 open(out,'w').write(s)
 print(out, len(s))
