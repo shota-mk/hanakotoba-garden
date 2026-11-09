@@ -223,11 +223,61 @@ def timeline(fig, spec):
         fig.text(x, band_bottom - 0.03, t['label'], fontproperties=fp('regular', 10), color=FAINT, ha='center', va='top', linespacing=1.3)
 
 
+def curve(fig, spec):
+    """努力と結果の曲線（終盤で急に伸びる形）。最後の区間をオレンジの帯で示し、右に結果の差の矢印を付ける。"""
+    import math
+    has_panel = bool(spec.get('panel'))
+    x0, x1 = 0.09, (0.54 if has_panel else 0.8)
+    top, bottom = y_of(250), plot_bottom(spec) + 0.04
+    ax = fig.add_axes([x0, bottom, x1 - x0, top - bottom])
+    band_start, end = spec.get('band', [95, 99.5])
+
+    def f(x):
+        return 0.07 + 0.02 * x / 100 + 0.9 * math.exp((x - 100) / 4)
+
+    xs = [i / 10 for i in range(0, int(end * 10) + 1)]
+    ax.fill_between([x for x in xs if x >= band_start], 0, [f(x) for x in xs if x >= band_start], color=ACCENT, alpha=0.18, lw=0, zorder=1)
+    ax.axvspan(band_start, end, ymin=0, ymax=f(band_start) / 1.05, color=ACCENT, alpha=0.55, lw=0, zorder=1)
+    ax.plot(xs, [f(x) for x in xs], color=INK, lw=4, solid_capstyle='round', zorder=3)
+    ax.set_xlim(0, 112)
+    ax.set_ylim(0, 1.05)
+    for s in ('top', 'right'):
+        ax.spines[s].set_visible(False)
+    for s in ('left', 'bottom'):
+        ax.spines[s].set_color(AXIS)
+        ax.spines[s].set_linewidth(1.5)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.annotate('', xy=(112, 0), xytext=(0, 0), arrowprops=dict(arrowstyle='-|>', color=AXIS, lw=1.5), annotation_clip=False)
+    ax.annotate('', xy=(0, 1.05), xytext=(0, 0), arrowprops=dict(arrowstyle='-|>', color=AXIS, lw=1.5), annotation_clip=False)
+    ax.text(111, -0.05, spec.get('x_label', '努力'), fontproperties=fp('bold', 12), color=INK, ha='right', va='top')
+    ax.text(-1.5, 1.04, spec.get('y_label', '結果'), fontproperties=fp('bold', 12), color=INK, ha='right', va='top')
+    # 結果の差（帯の始まりから終わりまでの伸び）
+    xa = end + 3.5
+    ax.annotate('', xy=(xa, f(end)), xytext=(xa, f(band_start)), arrowprops=dict(arrowstyle='<|-|>', color=ACCENT, lw=2.5))
+    ax.plot([band_start, xa + 1.5], [f(band_start)] * 2, color=FAINT, lw=1, ls=(0, (3, 3)))
+    ax.plot([end, xa + 1.5], [f(end)] * 2, color=FAINT, lw=1, ls=(0, (3, 3)))
+    ax.text(xa + 2, (f(band_start) + f(end)) / 2, spec.get('gap_label', '結果の差'), fontproperties=fp('bold', 14), color=ACCENT, ha='left', va='center')
+    ly = f(band_start) * 0.45
+    ax.plot([(band_start + end) / 2, xa + 1.5], [ly, ly], color=INK, lw=1.2)
+    ax.text(xa + 2, ly, spec.get('band_label', '最後の0.5%'), fontproperties=fp('bold', 14), color=INK, ha='left', va='center')
+    if spec.get('flat_label'):
+        ax.text(42, f(42) + 0.16, spec['flat_label'], fontproperties=fp('regular', 11), color=SUB, ha='center', va='bottom')
+    if has_panel:
+        p = spec['panel']
+        px = 0.73
+        fig.text(px, top - 0.02, p['title'], fontproperties=fp('bold', 14), color=INK, va='top')
+        y = top - 0.1
+        for para in p['paras']:
+            fig.text(px, y, para, fontproperties=fp('regular', 11), color=SUB, va='top', linespacing=1.6)
+            y -= 0.046 * (para.count('\n') + 1) + 0.045
+
+
 def main():
     spec = json.load(open(sys.argv[1], encoding='utf-8'))
     out = sys.argv[2]
     fig = plt.figure(figsize=(W / 200, H / 200), dpi=200, facecolor='white')
-    {'hbar': hbar, 'vbar': vbar, 'timeline': timeline}[spec['type']](fig, spec)
+    {'hbar': hbar, 'vbar': vbar, 'timeline': timeline, 'curve': curve}[spec['type']](fig, spec)
     header_footer(fig, spec)
     fig.savefig(out, dpi=200, facecolor='white')
     print(out)
