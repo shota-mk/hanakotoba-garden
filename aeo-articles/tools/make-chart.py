@@ -69,7 +69,7 @@ def header_footer(fig, spec, low=False):
     if spec.get('subtitle'):
         fig.text(LEFT, y_of(183), spec['subtitle'], fontproperties=fp('regular', 11.5), color=SUB, va='center')
     if spec.get('takeaway'):
-        fig.text(LEFT, y_of(800), spec['takeaway'], fontproperties=fp('bold', 13), color=INK, va='center')
+        fig.text(LEFT, y_of(spec.get('_takeaway_px', 800)), spec['takeaway'], fontproperties=fp('bold', 13), color=INK, va='center')
     if spec.get('note'):
         fig.text(LEFT, y_of(858), spec['note'], fontproperties=fp('regular', 11), color=SUB, va='center')
     if spec.get('source'):
@@ -227,8 +227,12 @@ def curve(fig, spec):
     """努力と結果の曲線（終盤で急に伸びる形）。最後の区間をオレンジの帯で示し、右に結果の差の矢印を付ける。"""
     import math
     has_panel = bool(spec.get('panel'))
-    x0, x1 = 0.09, (0.54 if has_panel else 0.8)
-    top, bottom = y_of(250), plot_bottom(spec) + 0.04
+    x0, x1 = (0.09, 0.54) if has_panel else (0.08, 0.84)
+    top, bottom = (y_of(250), plot_bottom(spec) + 0.04) if has_panel else (y_of(235), plot_bottom(spec) + 0.025)
+    if not has_panel and not spec.get('source') and not spec.get('note'):
+        # 出典も補足もないときは、グラフを下まで広げ、太字の一言を一番下に置く
+        bottom = y_of(930)
+        spec['_takeaway_px'] = 1035
     ax = fig.add_axes([x0, bottom, x1 - x0, top - bottom])
     band_start, end = spec.get('band', [95, 99.5])
 
@@ -257,12 +261,13 @@ def curve(fig, spec):
     ax.annotate('', xy=(xa, f(end)), xytext=(xa, f(band_start)), arrowprops=dict(arrowstyle='<|-|>', color=ACCENT, lw=2.5))
     ax.plot([band_start, xa + 1.5], [f(band_start)] * 2, color=FAINT, lw=1, ls=(0, (3, 3)))
     ax.plot([end, xa + 1.5], [f(end)] * 2, color=FAINT, lw=1, ls=(0, (3, 3)))
-    ax.text(xa + 2, (f(band_start) + f(end)) / 2, spec.get('gap_label', '結果の差'), fontproperties=fp('bold', 14), color=ACCENT, ha='left', va='center')
+    big = 0 if has_panel else 3
+    ax.text(xa + 2, (f(band_start) + f(end)) / 2, spec.get('gap_label', '結果の差'), fontproperties=fp('bold', 14 + big), color=ACCENT, ha='left', va='center')
     ly = f(band_start) * 0.45
     ax.plot([(band_start + end) / 2, xa + 1.5], [ly, ly], color=INK, lw=1.2)
-    ax.text(xa + 2, ly, spec.get('band_label', '最後の0.5%'), fontproperties=fp('bold', 14), color=INK, ha='left', va='center')
+    ax.text(xa + 2, ly, spec.get('band_label', '最後の0.5%'), fontproperties=fp('bold', 14 + big), color=INK, ha='left', va='center')
     if spec.get('flat_label'):
-        ax.text(42, f(42) + 0.16, spec['flat_label'], fontproperties=fp('regular', 11), color=SUB, ha='center', va='bottom')
+        ax.text(42, f(42) + 0.16, spec['flat_label'], fontproperties=fp('regular', 11 + big), color=SUB, ha='center', va='bottom')
     if has_panel:
         p = spec['panel']
         px = 0.73
