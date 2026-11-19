@@ -78,6 +78,10 @@ def header_footer(fig, spec, low=False):
 
 def plot_bottom(spec):
     """太字の一言・補足があればグラフはその上まで、無ければ下の方まで使う。"""
+    if spec.get('takeaway') and not spec.get('source') and not spec.get('note'):
+        # 出典なし（2026-11-09 以降）：グラフを下まで広げ、一言を下端に置く
+        spec['_takeaway_px'] = 1025
+        return y_of(905)
     return y_of(705) if (spec.get('takeaway') or spec.get('note')) else y_of(935)
 
 
